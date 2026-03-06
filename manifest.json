@@ -1,0 +1,57 @@
+{
+    "name": "Jippy",
+    "short_name": "J",
+    "version": "0.0.1",
+    "description": "Jippy, a Clippy for Jira.",
+    "manifest_version": 3,
+    "minimum_chrome_version": "122",
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "*://strategyagile.atlassian.net/*"
+    ],
+    "background": {
+        "service_worker": "src/js/background.js"
+    },
+    "icons": {
+        "16": "src/resources/clippy_paper.png",
+        "32": "src/resources/clippy_paper.png",
+        "48": "src/resources/clippy_paper.png",
+        "128": "src/resources/clippy_paper.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "/src/*",
+                "/src/**/*"
+            ],
+            "matches": [
+                "*://strategyagile.atlassian.net/*"
+            ]
+        },
+        {
+            "resources": [
+                "/src/resources/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://strategyagile.atlassian.net/*"
+            ],
+            "run_at": "document_idle",
+            "css": [
+                "src/css/clippy.css"
+            ],
+            "js": [
+                "src/js/clippy.js"
+            ]
+        }
+    ]
+}
