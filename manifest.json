@@ -50,8 +50,8 @@
                 "src/css/clippy.css"
             ],
             "js": [
-                "src/js/main.js",
-                "src/js/clippy.js"
+                "src/js/clippy.js",
+                "src/js/main.js"
             ]
         }
     ]

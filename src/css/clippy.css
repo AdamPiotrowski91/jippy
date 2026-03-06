@@ -1,0 +1,22 @@
+#jippy {
+    position: absolute;
+    bottom: 10rem;
+    right: 10rem;
+}
+
+#jippy .jippy-img {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    width: 5rem;
+    height: 5rem;
+}
+#jippy .jippy-img.static {
+    background-image: url(chrome-extension://__MSG_@@extension_id__/src/resources/clippy_paper.png);
+}
+#jippy .jippy-img.small {
+    background-image: url(chrome-extension://__MSG_@@extension_id__/src/resources/clippy.png);
+}
+#jippy .jippy-img.action {
+    background-image: url(chrome-extension://__MSG_@@extension_id__/src/resources/clippy_rotate_animated.gif);
+}

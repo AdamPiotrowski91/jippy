@@ -2,6 +2,10 @@
 
 chrome.runtime.onMessage.addListener(
     (info, _sender, respond) => {
-        console.log(info);
+        const jippy = new Clippy();
+
+        setTimeout(() => {
+            jippy.changeImage('action');
+        }, 2000);
     }
 );
