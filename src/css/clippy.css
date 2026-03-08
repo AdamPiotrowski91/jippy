@@ -10,6 +10,8 @@
     background-size: contain;
     width: 5rem;
     height: 5rem;
+
+    transition: all 0.3s ease-in-out;
 }
 #jippy .jippy-img.static {
     background-image: url(chrome-extension://__MSG_@@extension_id__/src/resources/clippy_paper.png);
@@ -19,4 +21,41 @@
 }
 #jippy .jippy-img.action {
     background-image: url(chrome-extension://__MSG_@@extension_id__/src/resources/clippy_rotate_animated.gif);
+}
+
+@keyframes clippy-dance {
+    0% {
+        rotate: -3deg;
+    }
+    10% {
+        rotate: 3deg;
+    }
+    20% {
+        rotate: -3deg;
+    }
+    30% {
+        rotate: 3deg;
+    }
+    50% {
+        rotate: -10deg;
+    }
+    70% {
+        rotate: 10deg;
+    }
+    80% {
+        rotate: -3deg;
+    }
+    90% {
+        rotate: 3deg;
+    }
+    100% {
+        rotate: -3deg;
+    }
+}
+
+#jippy .jippy-img.dance {
+    animation: clippy-dance 1s infinite;
+}
+#jippy .jippy-img.dance:hover {
+    animation-play-state: paused;
 }
