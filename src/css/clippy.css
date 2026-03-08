@@ -2,8 +2,11 @@
     position: absolute;
     bottom: 10rem;
     right: 10rem;
+
+    --border-color: rgb(230, 230, 230);
 }
 
+/* Image */
 #jippy .jippy-img {
     background-repeat: no-repeat;
     background-position: center;
@@ -56,6 +59,44 @@
 #jippy .jippy-img.dance {
     animation: clippy-dance 1s infinite;
 }
-#jippy .jippy-img.dance:hover {
-    animation-play-state: paused;
+
+/* Bubble */
+#jippy .jippy-bubble-container {
+    position: relative;
+    width: 0;
+    height: 0;
+}
+
+#jippy .jippy-bubble {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    width: max-content;
+    min-width: 100px;
+    max-width: 15vw;
+    border-radius: 30px 30px 0 30px;
+    background: url(chrome-extension://__MSG_@@extension_id__/src/resources/clipboard-bg.jpg) center;
+    padding: 1rem;
+    box-shadow: 0 0 5px 2px var(--border-color);
+
+    opacity: 1;
+    transition: all 0.5s ease-in-out;
+}
+#jippy .jippy-bubble,
+#jippy .jippy-bubble p {
+    margin: 2px;
+
+    color: black;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1rem;
+    text-align: right;
+    text-shadow:
+        -1px -1px 3px var(--border-color),
+        -1px 1px 3px var(--border-color),
+        1px -1px 3px var(--border-color),
+        1px 1px 3px var(--border-color);
+}
+#jippy .jippy-bubble.hide-bubble {
+    opacity: 0;
 }

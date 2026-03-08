@@ -21,7 +21,10 @@ class Clippy {
 
             this.clippy.setAttribute('id', 'jippy');
             this.clippy.innerHTML = `
-            <div class="jippy-img static"></div>
+                <div class="jippy-bubble-container">
+                    <div class="jippy-bubble hide-bubble"></div>
+                </div>
+                <div class="jippy-img static"></div>
             `;
             this.document.body.appendChild(this.clippy);
         }
@@ -29,7 +32,11 @@ class Clippy {
 
     /** @type {HTMLDivElement} */
     get clippyIMG() {
-        return this.clippy.children[0];
+        return this.clippy.querySelector('.jippy-img');
+    }
+    /** @type {HTMLDivElement} */
+    get clippyBubble() {
+        return this.clippy.querySelector('.jippy-bubble');
     }
     get existedBefore() {
         return this.#existedBefore;
@@ -85,16 +92,22 @@ class Clippy {
         }, 3000);
     }
 
+    stopAnimation = () => {
+        this.#animationID = 0;
+    }
+
     /**
      * Play "welcome" animation, then enable animation.
      */
     welcome = () => {
-        if (this.#animationID) return;
-
+        this.changeMove('none');
         this.changeImage('action');
+        this.say(["Hi! I am Jippy."], 2);
+
         setTimeout(() => {
             this.changeImage('static');
             this.changeMove('dance');
+            this.say(["Click me to see what I can do!"], 3);
 
             setTimeout(() => {
                 this.changeImage('small');
@@ -103,6 +116,30 @@ class Clippy {
                 this.animate();
             }, 3000);
         }, 2000);
+    }
+
+    showBubble = () => this.clippyBubble.classList.remove('hide-bubble');
+    hideBubble = () => this.clippyBubble.classList.add('hide-bubble');
+
+    /**
+     * Display text as a speech bubble over Clippy.
+     *
+     * _Note: string will be treated literally,
+     * but array of strings will be parsed as paragraphs._
+     * @param {string | Array<string> | HTMLElement} content
+     * @param {number} hideAfterSec
+     */
+    say = (content, hideAfterSec = null) => {
+        if (Array.isArray(content)) {
+            content = content.map((c) => `<p>${c}</p>`).join("");
+        }
+
+        this.clippyBubble.innerHTML = content;
+        this.showBubble();
+
+        if (hideAfterSec) {
+            setTimeout(() => { this.hideBubble(); }, hideAfterSec * 999);
+        }
     }
 
 
