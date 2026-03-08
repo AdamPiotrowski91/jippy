@@ -10,11 +10,16 @@
 }
 
 .loading-dismiss {
+    --time: 8s;
+
     border-width: 3px !important;
     border-style: solid !important;
     border-image: conic-gradient(#DDDDDD var(--start-deg), 0grad, #181818 var(--end-deg)) 1 !important;
 
-    transition: --start-deg 10s linear, --end-deg 10s linear !important;
+    transition:
+        --start-deg var(--time) linear,
+        --end-deg var(--time) linear
+        !important;
 
     --start-deg: 360deg;
     --end-deg: 0deg;

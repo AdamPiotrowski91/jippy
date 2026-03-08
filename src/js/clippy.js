@@ -142,6 +142,18 @@ class Clippy {
         }
     }
 
+    /**
+     * Apply `fn` if the dataset `propertyName` is not set.
+     * @param {string} propertyName
+     * @param {() => void} fn
+     */
+    conditionalDatasetAction = (propertyName, fn) => {
+        if (propertyName && this.#getDataProperty[propertyName]) return;
+
+        this.#setDataProperty[propertyName] = propertyName;
+        fn();
+    }
+
 
     /**
      * @param {string} property

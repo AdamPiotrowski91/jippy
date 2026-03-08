@@ -4,18 +4,32 @@ chrome.runtime.onMessage.addListener(
     (info, _sender, respond) => {
         const jippy = new Clippy();
 
-        if (jippy.existedBefore) jippy.animate();
-        else jippy.welcome();
+        if (jippy.existedBefore) {
+            jippy.animate();
+            return;
+        }
 
-        // setInterval(() => {
-        //     const alerts = [...document.querySelectorAll('.atlaskit-portal-container [role=alert]')];
+        jippy.welcome();
+        jippy.conditionalDatasetAction(
+            'notificationsObserverSet',
+            () => {
+                const observerFN = () => {
+                    const alerts = [...document.querySelectorAll('.atlaskit-portal-container [role=alert]')];
 
-        //     alerts.forEach((alert) => {
-        //         [...alert.querySelectorAll('button:not(.loading-dismiss)')]
-        //             ?.filter((btn) => btn.textContent.trim() == "Dismiss")
-        //             ?.at(0)
-        //             ?.classList.add('loading-dismiss');
-        //     });
-        // }, 2000);
+                    alerts.forEach((alert) => {
+                        const btn = [...alert.querySelectorAll('button:not(.loading-dismiss)')]
+                            ?.filter((btn) => btn.textContent.trim() == "Dismiss")
+                            ?.at(0);
+
+                        btn?.classList.add('loading-dismiss');
+
+                        setTimeout(() => { btn?.click(); }, 8_000);
+                    });
+                }
+
+                const observer = new MutationObserver(observerFN);
+                observer.observe(document.body, { 'childList': true, 'subtree': true });
+            },
+        );
     }
 );
