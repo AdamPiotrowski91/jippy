@@ -102,7 +102,7 @@ class Clippy {
     welcome = () => {
         this.changeMove('none');
         this.changeImage('action');
-        this.say(["Hi! I am Jippy."], 2);
+        this.say(["Hi! I am Jippy.", "Clippy for Jira."], 2);
 
         setTimeout(() => {
             this.changeImage('static');
@@ -126,8 +126,8 @@ class Clippy {
      *
      * _Note: string will be treated literally,
      * but array of strings will be parsed as paragraphs._
-     * @param {string | Array<string> | HTMLElement} content
-     * @param {number} hideAfterSec
+     * @param {string | Array<string>} content
+     * @param {number} hideAfterSec (optional)
      */
     say = (content, hideAfterSec = null) => {
         if (Array.isArray(content)) {

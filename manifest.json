@@ -47,7 +47,8 @@
             ],
             "run_at": "document_idle",
             "css": [
-                "src/css/clippy.css"
+                "src/css/clippy.css",
+                "src/css/override.css"
             ],
             "js": [
                 "src/js/clippy.js",

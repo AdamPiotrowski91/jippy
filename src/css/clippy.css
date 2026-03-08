@@ -1,7 +1,8 @@
 #jippy {
     position: absolute;
     bottom: 10rem;
-    right: 10rem;
+    right: 1rem;
+    cursor: pointer;
 
     --border-color: rgb(230, 230, 230);
 }
@@ -81,7 +82,8 @@
     box-shadow: 0 0 5px 2px var(--border-color);
 
     opacity: 1;
-    transition: all 0.5s ease-in-out;
+    transform-origin: bottom right;
+    transition: all 0.3s ease-in-out;
 }
 #jippy .jippy-bubble,
 #jippy .jippy-bubble p {
@@ -99,4 +101,6 @@
 }
 #jippy .jippy-bubble.hide-bubble {
     opacity: 0;
+    transform: scale(0.01);
+    pointer-events: none;
 }

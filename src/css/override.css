@@ -1,0 +1,21 @@
+@property --start-deg {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+@property --end-deg {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 360deg;
+}
+
+.loading-dismiss {
+    border-width: 3px !important;
+    border-style: solid !important;
+    border-image: conic-gradient(#DDDDDD var(--start-deg), 0grad, #181818 var(--end-deg)) 1 !important;
+
+    transition: --start-deg 10s linear, --end-deg 10s linear !important;
+
+    --start-deg: 360deg;
+    --end-deg: 0deg;
+}
