@@ -1,7 +1,7 @@
 #jippy {
     position: absolute;
-    bottom: 10rem;
-    right: 1rem;
+    bottom: 100px;
+    right: 10px;
     cursor: pointer;
 
     --border-color: rgb(230, 230, 230);
