@@ -6,6 +6,8 @@ class Clippy {
     clippy;
     /** @type {boolean} */
     #existedBefore = false;
+    /** @type {Promise<void>} */
+    #promiseQueueHead = Promise.resolve();
 
     constructor() {
         this.document = window.document;
@@ -69,27 +71,32 @@ class Clippy {
     }
 
     /**
+     * @async // aka sync with promises queue
      * Start random set of animations to appear occasionally.
      */
     animate = () => {
-        this.#animationID = setInterval(() => {
-            const rand = Math.random();
+        const fn = () => {
+            this.#animationID = setInterval(() => {
+                const rand = Math.random();
 
-            if (rand < 0.90) {
-                this.changeMove('none');
-                this.changeImage('small');
-            } else {
-                this.changeImage('static');
-
-                const rand2 = Math.random();
-
-                if (rand2 < 0.15) {
+                if (rand < 0.90) {
                     this.changeMove('none');
+                    this.changeImage('small');
                 } else {
-                    this.changeMove('dance');
+                    this.changeImage('static');
+
+                    const rand2 = Math.random();
+
+                    if (rand2 < 0.15) {
+                        this.changeMove('none');
+                    } else {
+                        this.changeMove('dance');
+                    }
                 }
-            }
-        }, 3000);
+            }, 3000);
+        }
+
+        this.#updatePromise(fn);
     }
 
     stopAnimation = () => {
@@ -97,25 +104,30 @@ class Clippy {
     }
 
     /**
+     * @async
      * Play "welcome" animation, then enable animation.
      */
     welcome = () => {
-        this.changeMove('none');
-        this.changeImage('action');
-        this.say(["Hi! I am Jippy.", "Clippy for Jira."], 2);
-
-        setTimeout(() => {
-            this.changeImage('static');
-            this.changeMove('dance');
-            this.say(["Click me to see what I can do!"], 3);
+        const promise = new Promise((resolve) => {
+            this.changeMove('none');
+            this.changeImage('action');
+            this.say(["Hi! I am Jippy.", "Clippy for Jira."], 2);
 
             setTimeout(() => {
-                this.changeImage('small');
-                this.changeMove('none');
+                this.changeImage('static');
+                this.changeMove('dance');
+                this.say(["Click me to see what I can do!"], 3);
 
-                this.animate();
-            }, 3000);
-        }, 2000);
+                setTimeout(() => {
+                    this.changeImage('small');
+                    this.changeMove('none');
+
+                    resolve();
+                }, 3000);
+            }, 2000);
+        });
+
+        this.#updatePromise(promise);
     }
 
     showBubble = () => this.clippyBubble.classList.remove('hide-bubble');
@@ -138,7 +150,7 @@ class Clippy {
         this.showBubble();
 
         if (hideAfterSec) {
-            setTimeout(() => { this.hideBubble(); }, hideAfterSec * 999);
+            setTimeout(() => { this.hideBubble(); }, hideAfterSec * 1000 - 1);
         }
     }
 
@@ -168,5 +180,14 @@ class Clippy {
      */
     #getDataProperty = (property) => {
         return this.clippy.dataset[property];
+    }
+
+    /**
+     * @param {Promise<void> | () => void} promiseOrFN
+     */
+    #updatePromise = (promiseOrFN) => {
+        this.#promiseQueueHead = this.#promiseQueueHead.then(
+            promiseOrFN instanceof Promise ? () => promiseOrFN : Promise.resolve(promiseOrFN()),
+        );
     }
 }

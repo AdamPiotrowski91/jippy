@@ -14,16 +14,20 @@ chrome.runtime.onMessage.addListener(
             'notificationsObserverSet',
             () => {
                 const observerFN = () => {
+                    /** @type {HTMLDivElement[]} */
                     const alerts = [...document.querySelectorAll('.atlaskit-portal-container [role=alert]')];
 
                     alerts.forEach((alert) => {
+                        /** @type {HTMLButtonElement | undefined} */
                         const btn = [...alert.querySelectorAll('button:not(.loading-dismiss)')]
                             ?.filter((btn) => btn.textContent.trim() == "Dismiss")
                             ?.at(0);
 
-                        btn?.classList.add('loading-dismiss');
+                        if (btn) {
+                            btn.classList.add('loading-dismiss');
 
-                        setTimeout(() => { btn?.click(); }, 8_000);
+                            setTimeout(() => { btn?.click(); }, 8_000);
+                        }
                     });
                 }
 
@@ -31,5 +35,6 @@ chrome.runtime.onMessage.addListener(
                 observer.observe(document.body, { 'childList': true, 'subtree': true });
             },
         );
+        jippy.animate();
     }
 );
