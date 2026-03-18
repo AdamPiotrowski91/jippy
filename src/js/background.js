@@ -5,6 +5,12 @@
  * @typedef {(id: number, info: Record<string, any>, tab: Record<string, any>) => void} tConnectListenerFN
  * @typedef {(id: number, message: tMessage, options?: {}, fn?: (res: Record<string, any>) => void) => void} tSendMessageFN
  * @typedef {(info: tMessage, s: Record<string, any>, res?: (arg: any) => void) => void} tMessageListenerFN
+ * @typedef {{
+ *     get: (keys: string[] | null, callback: (items: Record<string, any>) => void) => void,
+ *     set: (items: Record<string, any>, callback?: () => void) => void,
+ *     remove: (keys: string[], callback?: () => void) => void,
+ *   }} tChromeStorage
+ *
  *
  * @type {{
  *      tabs: {
@@ -12,6 +18,11 @@
  *          sendMessage: tSendMessageFN
  *      },
  *      runtime: { onMessage: { addListener: (fn: tMessageListenerFN) => void } }
+ *      storage: {
+ *          local: tChromeStorage,
+ *          session: tChromeStorage,
+ *          sync: tChromeStorage,
+ *      },
  * }}
  */
 var chrome = chrome;

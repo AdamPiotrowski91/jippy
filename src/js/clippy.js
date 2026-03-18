@@ -99,8 +99,15 @@ class Clippy {
         this.#updatePromise(fn);
     }
 
+    /**
+     * @async
+     */
     stopAnimation = () => {
-        this.#animationID = 0;
+        const fn = () => {
+            this.#animationID = 0;
+        }
+
+        this.#updatePromise(fn);
     }
 
     /**

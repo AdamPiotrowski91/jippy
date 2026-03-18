@@ -51,6 +51,7 @@
                 "src/css/override.css"
             ],
             "js": [
+                "src/js/storage.js",
                 "src/js/clippy.js",
                 "src/js/main.js"
             ]
