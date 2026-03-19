@@ -27,7 +27,7 @@ const getStorageData = async () => new Promise((resolve) => {
 /**
  * Cache data into storage. Can be partial, without losing what is already stored.
  * @param {Partial<tStoredData>} changes dictionary of changes to apply to stored data
- * @returns
+ * @returns {Promise<void>}
  */
 const setStorageData = async (changes) => {
     const data = await getStorageData();
@@ -35,4 +35,15 @@ const setStorageData = async (changes) => {
     return new Promise((resolve) => {
         chrome.storage.sync.set({ [STORAGE_KEY]: { ...data, ...changes } }, resolve());
     });
+}
+
+
+/**
+ * Directly save a `value` to a storage cache under `key`.
+ * @template T
+ * @param {keyof tStoredData} key
+ * @param {T} value
+ */
+const storeDirectValue = async (key, value) => {
+    return setStorageData({ [key]: value });
 }

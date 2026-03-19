@@ -51,10 +51,46 @@ chrome.runtime.onMessage.addListener(
             jippy.conditionalDatasetAction(
                 'appliedClickEvent',
                 () => {
-                    /**
-                     * @param {PointerEvent} _event
-                     */
-                    const clickFN = (_event) => {
+                    const menuOpenSettingsFN = () => {
+                        jippy.say(`
+                            <h2 class="jippy-settings">SETTINGS</h2>
+
+                            <p>Changes to those settings may require page refresh.</p>
+
+                            <ul class="jippy-menu checkboxes">
+                                <li>
+                                    <label>
+                                        <input type="checkbox" id="welcome-msg" />
+                                        <span>Show welcome message</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" id="animate" />
+                                        <span>Animate Jippy</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" id="non-persistent-notifs" />
+                                        <span>Make Jira Notifications non-persistent</span>
+                                    </label>
+                                </li>
+                            </ul>
+                        `.trim());
+
+                        jippy.setUpBubbleCheckbox(
+                            '#welcome-msg', showWelcomeMessage, 'showWelcomeMessage',
+                        );
+                        jippy.setUpBubbleCheckbox(
+                            '#animate', animateJippy, 'animateJippy',
+                        );
+                        jippy.setUpBubbleCheckbox(
+                            '#non-persistent-notifs', makeNotifsNotPersistent, 'makeNotifsNotPersistent',
+                        );
+                    }
+
+                    const openMenuFN = () => {
                         jippy.say(`
                             <h1>MENU</h1>
 
@@ -62,9 +98,22 @@ chrome.runtime.onMessage.addListener(
                                 <li class="jippy-settings">Settings</li>
                             </ul>
                         `.trim());
+
+                        jippy.clippyBubble
+                            .querySelector('.jippy-settings')
+                            .addEventListener('click', menuOpenSettingsFN);
                     }
 
-                    jippy.clippy.addEventListener('click', clickFN);
+                    jippy.clippyIMG.addEventListener('click', openMenuFN);
+                    window.document.addEventListener('click', () => {
+                        const elem = document.activeElement;
+                        const bubble = jippy.clippyBubble;
+
+                        if (
+                            !elem.contains(bubble)
+                            && !bubble.contains(elem)
+                        ) jippy.hideBubble();
+                    });
                 }
             )
         })()

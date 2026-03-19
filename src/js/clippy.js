@@ -99,7 +99,7 @@ class Clippy {
             }, 3000);
         }
 
-        this.#updatePromise(fn);
+        this.passThroughPromiseQueue(fn);
     }
 
     /**
@@ -110,7 +110,7 @@ class Clippy {
             this.#animationID = 0;
         }
 
-        this.#updatePromise(fn);
+        this.passThroughPromiseQueue(fn);
     }
 
     /**
@@ -137,7 +137,7 @@ class Clippy {
             }, 2000);
         });
 
-        this.#updatePromise(promise);
+        this.passThroughPromiseQueue(promise);
     }
 
     showBubble = () => this.clippyBubble.classList.remove('hide-bubble');
@@ -180,6 +180,36 @@ class Clippy {
         fn();
     }
 
+    /**
+     * Make sure that the function or promise provided is synced up with all async queued actions
+     * that goes through Jippy
+     * @param {Promise<void> | () => void} promiseOrFN
+     */
+    passThroughPromiseQueue = (promiseOrFN) => {
+        this.#promiseQueueHead = this.#promiseQueueHead.then(
+            promiseOrFN instanceof Promise ? () => promiseOrFN : Promise.resolve(promiseOrFN()),
+        );
+    }
+
+    /**
+     * Set up `input[type=checkbox]` element inside Jippy Bubble to be interactive
+     * @param {string} selector `querySelector` first argument to find core element
+     * @param {boolean} defaultValue
+     * @param {keyof tStoredData} storageKey
+     */
+    setUpBubbleCheckbox = (selector, defaultValue, storageKey) => {
+        /** @type {HTMLInputElement} */
+        const element = this.clippyBubble.querySelector(selector);
+
+        element.checked = defaultValue;
+
+        element.addEventListener('change', ({ target: { checked } }) => {
+            this.passThroughPromiseQueue(
+                () => storeDirectValue(storageKey, checked)
+            );
+        });
+    }
+
 
     /**
      * @param {string} property
@@ -195,13 +225,6 @@ class Clippy {
     #getDataProperty = (property) => {
         return this.clippy.dataset[property];
     }
-
-    /**
-     * @param {Promise<void> | () => void} promiseOrFN
-     */
-    #updatePromise = (promiseOrFN) => {
-        this.#promiseQueueHead = this.#promiseQueueHead.then(
-            promiseOrFN instanceof Promise ? () => promiseOrFN : Promise.resolve(promiseOrFN()),
-        );
-    }
 }
+
+
