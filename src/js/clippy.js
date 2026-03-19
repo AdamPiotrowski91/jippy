@@ -32,6 +32,9 @@ class Clippy {
         }
     }
 
+    get promise() {
+        return this.#promiseQueueHead;
+    }
     /** @type {HTMLDivElement} */
     get clippyIMG() {
         return this.clippy.querySelector('.jippy-img');
@@ -162,12 +165,16 @@ class Clippy {
     }
 
     /**
-     * Apply `fn` if the dataset `propertyName` is not set.
+     * Apply `fn` if the dataset `propertyName` is not set and `condition` is met, if provided.
      * @param {string} propertyName
      * @param {() => void} fn
+     * @param {boolean} condition
      */
-    conditionalDatasetAction = (propertyName, fn) => {
-        if (propertyName && this.#getDataProperty[propertyName]) return;
+    conditionalDatasetAction = (propertyName, fn, condition = true) => {
+        if (
+            !condition
+            || (propertyName && this.#getDataProperty[propertyName])
+        ) return;
 
         this.#setDataProperty[propertyName] = propertyName;
         fn();

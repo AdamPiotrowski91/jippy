@@ -5,6 +5,8 @@ const STORAGE_KEY = "jippy_data"
 /**
  * @typedef {{
  *      showWelcomeMessage?: boolean,
+ *      animateJippy?: boolean,
+ *      makeNotifsNotPersistent?: boolean,
  * }} tStoredData
  */
 

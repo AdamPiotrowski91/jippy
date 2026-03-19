@@ -1,24 +1,25 @@
 "use strict";
 
 chrome.runtime.onMessage.addListener(
-    (info, _sender, respond) => {
+    (info, _sender, _respond) => {
         const jippy = new Clippy();
 
         (async () => {
-            console.log(await getStorageData());
             const {
                 showWelcomeMessage = true,
+                animateJippy = true,
+                makeNotifsNotPersistent = true,
             } = await getStorageData();
 
-            if (jippy.existedBefore) {
-                jippy.animate();
-                return;
-            }
+            // if everything has been already set, exit early
+            if (jippy.existedBefore) return;
 
             if (showWelcomeMessage) {
                 jippy.welcome();
                 await setStorageData({ showWelcomeMessage: false });
             }
+
+            if (animateJippy) jippy.animate();
 
             jippy.conditionalDatasetAction(
                 'notificationsObserverSet',
@@ -44,8 +45,28 @@ chrome.runtime.onMessage.addListener(
                     const observer = new MutationObserver(observerFN);
                     observer.observe(document.body, { 'childList': true, 'subtree': true });
                 },
+                makeNotifsNotPersistent,
             );
-            jippy.animate();
+
+            jippy.conditionalDatasetAction(
+                'appliedClickEvent',
+                () => {
+                    /**
+                     * @param {PointerEvent} _event
+                     */
+                    const clickFN = (_event) => {
+                        jippy.say(`
+                            <h1>MENU</h1>
+
+                            <ul class="jippy-menu">
+                                <li class="jippy-settings">Settings</li>
+                            </ul>
+                        `.trim());
+                    }
+
+                    jippy.clippy.addEventListener('click', clickFN);
+                }
+            )
         })()
     }
 );
