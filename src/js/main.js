@@ -2,6 +2,17 @@
 
 chrome.runtime.onMessage.addListener(
     (info, _sender, _respond) => {
+        // URL handling
+        try {
+            const url = new URL(info.tab.url);
+            const itemID = new URLSearchParams(url.searchParams).get("selectedIssue");
+
+            if (url.href.includes("issues?filter=") && itemID) {
+                window.history.replaceState({}, '', "https://strategyagile.atlassian.net/browse/" + itemID);
+            }
+        } catch (_) { }
+
+        // Jippy handling
         const jippy = new Clippy();
 
         (async () => {
