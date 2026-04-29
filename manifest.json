@@ -1,7 +1,7 @@
 {
     "name": "Jippy",
     "short_name": "J",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Jippy, a Clippy for Jira.",
     "manifest_version": 3,
     "minimum_chrome_version": "122",
@@ -51,6 +51,7 @@
                 "src/css/override.css"
             ],
             "js": [
+                "src/js/utils.js",
                 "src/js/storage.js",
                 "src/js/clippy.js",
                 "src/js/main.js"

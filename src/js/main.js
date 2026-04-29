@@ -60,6 +60,42 @@ chrome.runtime.onMessage.addListener(
             );
 
             jippy.conditionalDatasetAction(
+                'rightClickOnIDForCopyID',
+                () => {
+                    const selectors = [
+                        '[data-testid="native-issue-table.common.ui.issue-cells.issue-key.action-container"] a', // filter view table items IDs
+                        '[data-testid="issue.views.issue-base.foundation.breadcrumbs.current-issue.item"]', // selected item view Current Item ID
+                    ].join(", ");
+
+                    const observerFN = () => {
+                        /** @type {HTMLAnchorElement[]} */
+                        const anchors = [...document.querySelectorAll(selectors)]
+                            ?.filter((/** @type {HTMLAnchorElement} */ elem) => !elem.dataset?.eventSet) ?? [];
+
+                        anchors.forEach((anchor) => {
+                            anchor.dataset.eventSet = true;
+                            anchor.addEventListener('contextmenu', async (event) => {
+                                if (event.shiftKey) return;
+
+                                event.preventDefault();
+
+                                const success = await copyToClipboard(anchor.textContent);
+
+                                if (success) {
+                                    jippy.say('Copied Item ID to clipboard.', 3);
+                                } else {
+                                    jippy.say('Failed to copy Item ID to clipboard!', 5);
+                                }
+                            })
+                        });
+                    }
+
+                    const observer = new MutationObserver(observerFN);
+                    observer.observe(document.body, { 'childList': true, 'subtree': true });
+                },
+            );
+
+            jippy.conditionalDatasetAction(
                 'appliedClickEvent',
                 () => {
                     const menuOpenSettingsFN = () => {
@@ -108,6 +144,10 @@ chrome.runtime.onMessage.addListener(
                             <ul class="jippy-menu">
                                 <li class="jippy-settings">Settings</li>
                             </ul>
+
+                            <h2>Instructions</h2>
+
+                            <p>Right-Mouse-Click an Item ID to copy it to clipboard. Add \`SHIFT\` to allow default browser behaviour.</p>
                         `.trim());
 
                         jippy.clippyBubble
