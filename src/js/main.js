@@ -2,15 +2,6 @@
 
 chrome.runtime.onMessage.addListener(
     (info, _sender, _respond) => {
-        // URL handling
-        try {
-            const url = new URL(info.tab.url);
-            const itemID = new URLSearchParams(url.searchParams).get("selectedIssue");
-
-            if (url.href.includes("issues?filter=") && itemID) {
-                window.history.replaceState({}, '', "https://strategyagile.atlassian.net/browse/" + itemID);
-            }
-        } catch (_) { }
 
         // Jippy handling
         const jippy = new Clippy();
@@ -20,7 +11,23 @@ chrome.runtime.onMessage.addListener(
                 showWelcomeMessage = true,
                 animateJippy = true,
                 makeNotifsNotPersistent = true,
+                overrideFilterSelectionToPage = true,
             } = await getStorageData();
+
+            if (overrideFilterSelectionToPage) {
+                // URL handling
+                try {
+                    const url = new URL(info.tab.url);
+                    const params = new URLSearchParams(url.searchParams);
+                    const itemID = params.get("selectedIssue");
+                    const filter = params.get("filter");
+
+                    if (url.href.includes("/issues") && filter && itemID) {
+                        window.history.replaceState({}, '', url.origin + "/browse/" + itemID);
+                        location.reload();
+                    }
+                } catch (_) { }
+            }
 
             // if everything has been already set, exit early
             if (jippy.existedBefore) return;
@@ -123,6 +130,12 @@ chrome.runtime.onMessage.addListener(
                                         <span>Make Jira Notifications non-persistent</span>
                                     </label>
                                 </li>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" id="filter-select-to-page" />
+                                        <span>Make selecting item in Filter move to its page</span>
+                                    </label>
+                                </li>
                             </ul>
                         `.trim());
 
@@ -134,6 +147,9 @@ chrome.runtime.onMessage.addListener(
                         );
                         jippy.setUpBubbleCheckbox(
                             '#non-persistent-notifs', makeNotifsNotPersistent, 'makeNotifsNotPersistent',
+                        );
+                        jippy.setUpBubbleCheckbox(
+                            '#filter-select-to-page', overrideFilterSelectionToPage, 'overrideFilterSelectionToPage',
                         );
                     }
 
